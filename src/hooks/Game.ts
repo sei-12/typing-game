@@ -1,8 +1,9 @@
-import { useCallback, useEffect, useRef, useState } from "react";
-import type { GameProps } from "../components/Game";
+import { useEffect, useRef, useState } from "react";
+import type { EnglishWords, GameProps } from "../components/Game";
 import type { Quiz } from "../services/invoke";
 import { fetchQuizs } from "../services/invoke";
 import shuffle from "../utils/shuffle";
+import { useHotkeys } from "react-hotkeys-hook";
 
 export function useGame(): GameProps {
 
@@ -13,56 +14,54 @@ export function useGame(): GameProps {
 
         setCount(1)
         setMaxCount(quizs.current.length)
-        setWords(shuffle(quizs.current[0].english.split(" ")))
+        setWords(shuffle(quizs.current[0].english.split(" ").map(w => ({ content: w, inputed: false }))))
         setJapanese(quizs.current[0].japanese)
-        setInputed("")
-        setInputedWords([])
+        // setInputed("")
     }
 
     useEffect(() => { loadQuizs() }, [])
 
-    const [inputedWords, setInputedWords] = useState<string[]>([])
     const [japanese, setJapanese] = useState<string>("")
     const [count, setCount] = useState(1)
     const [maxCount, setMaxCount] = useState(0)
-    const [words, setWords] = useState<string[]>([])
+    const [words, setWords] = useState<EnglishWords[]>([])
     const [inputed, setInputed] = useState("")
+    const inputBox = useRef<HTMLInputElement>(null)
 
-    const onKeyDown = useCallback((e: KeyboardEvent) => {
-        if (e.key === " ") {
-            setInputed(prevInput => {
-                setInputedWords(prevWords => {
-                    return [...prevWords, prevInput]
-                })
-                return ""
-            })
-            return
-        }
+    useEffect(() => {
+        const includeWords = new Set(inputed.split(" "));
+        setWords(prev => {
+            return prev.map(p => ({
+                content: p.content,
+                inputed: includeWords.has(p.content)
+            }))
+        })
+    }, [inputed])
 
-        if (e.key === "Backspace") {
-            setInputed(prev => prev.slice(0, -1))
-            return
-        }
+    useHotkeys("ctrl+w", () => {
+        setInputed(prev => {
+            let targetSpace = prev.lastIndexOf(" ")
+            if (targetSpace === prev.length - 1) {
+                targetSpace = prev.lastIndexOf(" ", prev.length - 2)
+            }
+            const newVal = prev.slice(0, targetSpace + 1)
+            if (inputBox.current !== null) {
+                inputBox.current.value = newVal
+            }
+            return newVal
+        })
 
-        if (e.key.length !== 1) {
-            return
-        }
-
-        setInputed(prev => prev + e.key)
+    }, {
+        enableOnFormTags: true,
+        enableOnContentEditable: true
     }, [])
 
-    // 参考URL: https://stackoverflow.com/questions/53033625/global-keyboards-events-on-react
-    useEffect(() => {
-        window.addEventListener("keydown", onKeyDown);
-        return () => window.removeEventListener("keydown", onKeyDown);
-    }, []);
-
     return {
-        inputed,
         words,
         count,
         maxCount,
         japanese,
-        inputedWords
+        onChangeInputBox: setInputed,
+        inputBox,
     }
 }

@@ -1,13 +1,18 @@
-import { Box, Typography } from "@mui/material";
+import { Box, TextField, Typography } from "@mui/material";
 import { DisablePreventNavigation } from "../utils/DisablePreventNavigation";
 
+export type EnglishWords = {
+    content: string;
+    inputed: boolean;
+};
+
 export type GameProps = {
-    inputedWords: string[];
     japanese: string;
     count: number;
     maxCount: number;
-    words: string[];
-    inputed: string;
+    words: EnglishWords[];
+    inputBox: React.RefObject<HTMLInputElement>;
+    onChangeInputBox: (newVal: string) => void;
 };
 
 export function Game(p: GameProps) {
@@ -24,7 +29,7 @@ export function Game(p: GameProps) {
             <Box
                 sx={{
                     border: "solid 2px black",
-                    marginBlock: "5%",
+                    marginTop: "5%",
                     marginInline: "10%",
                     width: 0.8,
                     height: 80,
@@ -51,18 +56,35 @@ export function Game(p: GameProps) {
                 </Typography>
             </Box>
 
-            <Box>
+            <Box
+                sx={{
+                    border: "solid 1px black",
+                    marginTop: "3%",
+                    width: "90%",
+                    marginInline: "5%",
+                }}
+            >
                 {p.words.map((w, i) => {
-                    return <Typography key={i}>{w}</Typography>;
-                })}
-            </Box>
-            <Box>
-                {p.inputedWords.map((w, i) => {
-                    return <Typography key={i}>{w}</Typography>;
+                    return (
+                        <Typography
+                            sx={{
+                                color: w.inputed ? "red" : "blue",
+                                display: "inline-block",
+                                margin: 1,
+                            }}
+                            key={i}
+                        >
+                            {w.content}
+                        </Typography>
+                    );
                 })}
             </Box>
 
-            <Typography>{p.inputed}</Typography>
+            <TextField
+                autoComplete="off"
+                inputRef={p.inputBox}
+                onChange={(e) => p.onChangeInputBox(e.target.value)}
+            ></TextField>
         </Box>
     );
 }
