@@ -30,6 +30,7 @@ export default tseslint.config(
             "@typescript-eslint/no-namespace": "off",
             "react-hooks/exhaustive-deps": "off",
             "@typescript-eslint/consistent-type-imports": "warn",
+            "@typescript-eslint/no-empty-object-type": "warn",
             "prefer-const": "warn",
             "@typescript-eslint/no-unused-vars": "warn",
             "@typescript-eslint/strict-boolean-expressions": [
