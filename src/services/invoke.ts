@@ -12,26 +12,26 @@ export async function fetchQuizs(): Promise<Quiz[]> {
             english: "I was very sad last night",
             explanation: ""
         },
-        // {
-        //     japanese: "私はその本が好きではありません。",
-        //     english: "I do not like the book",
-        //     explanation: ""
-        // },
-        // {
-        //     japanese: "私達はゴルフをしません",
-        //     english: "We do not play golf",
-        //     explanation: ""
-        // },
-        // {
-        //     japanese: "彼らは肉を食べません",
-        //     english: "They don't eat meat",
-        //     explanation: ""
-        // },
-        // {
-        //     japanese: "私たちはコーヒーを飲みません",
-        //     english: "We don't drink coffee",
-        //     explanation: ""
-        // }
+        {
+            japanese: "私はその本が好きではありません。",
+            english: "I do not like the book",
+            explanation: ""
+        },
+        {
+            japanese: "私達はゴルフをしません",
+            english: "We do not play golf",
+            explanation: ""
+        },
+        {
+            japanese: "彼らは肉を食べません",
+            english: "They don't eat meat",
+            explanation: ""
+        },
+        {
+            japanese: "私たちはコーヒーを飲みません",
+            english: "We don't drink coffee",
+            explanation: ""
+        }
     ]
 
 }

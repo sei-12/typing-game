@@ -31,10 +31,6 @@ export function useGame(): GameProps {
     const inputBox = useRef<HTMLInputElement>(null)
 
     const nextQuiz = useCallback(() => {
-        if (quizs.current.length == count) {
-            navigate("/")
-            return
-        }
 
         if (inputBox.current !== null) {
             inputBox.current.value = ""
@@ -48,9 +44,14 @@ export function useGame(): GameProps {
         })
 
         return
-    },[])
+    }, [])
 
     useEffect(() => {
+        if (quizs.current.length == count) {
+            navigate("/")
+            return
+        }
+
         if (quizs.current.at(count - 1) !== undefined && inputed === quizs.current[count - 1].english) {
             nextQuiz()
             return
