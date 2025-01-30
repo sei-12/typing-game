@@ -32,6 +32,7 @@ export default tseslint.config(
             "@typescript-eslint/consistent-type-imports": "warn",
             "@typescript-eslint/no-empty-object-type": "warn",
             "prefer-const": "warn",
+            "no-empty": "warn",
             "@typescript-eslint/no-unused-vars": "warn",
             "@typescript-eslint/strict-boolean-expressions": [
                 "warn",
