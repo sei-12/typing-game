@@ -32,7 +32,7 @@ export function Game(p: GameProps) {
                     marginTop: "5%",
                     marginInline: "10%",
                     width: 0.8,
-                    height: 80,
+                    height: 220,
                     position: "relative",
                     display: "flex",
                 }}
@@ -68,7 +68,7 @@ export function Game(p: GameProps) {
                     return (
                         <Typography
                             sx={{
-                                color: w.inputed ? "red" : "blue",
+                                color: w.inputed ? "gray" : "black",
                                 display: "inline-block",
                                 margin: 1,
                             }}
@@ -81,8 +81,22 @@ export function Game(p: GameProps) {
             </Box>
 
             <TextField
+                sx={{
+                    marginTop: "3%",
+                    width: "70%",
+                    marginInline: "5%",
+                }}
                 autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                spellCheck={false}
+                variant="standard"
                 inputRef={p.inputBox}
+                onBlur={() => {
+                    setTimeout(() => {
+                        p.inputBox.current!.focus();
+                    }, 10);
+                }}
                 onChange={(e) => p.onChangeInputBox(e.target.value)}
             ></TextField>
         </Box>

@@ -1,11 +1,13 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import type { EnglishWords, GameProps } from "../components/Game";
 import type { Quiz } from "../services/invoke";
 import { fetchQuizs } from "../services/invoke";
 import shuffle from "../utils/shuffle";
 import { useHotkeys } from "react-hotkeys-hook";
+import { useNavigate } from "react-router-dom";
 
 export function useGame(): GameProps {
+    const navigate = useNavigate()
 
     const quizs = useRef<Quiz[]>([])
     const loadQuizs = async () => {
@@ -28,12 +30,46 @@ export function useGame(): GameProps {
     const [inputed, setInputed] = useState("")
     const inputBox = useRef<HTMLInputElement>(null)
 
+    const nextQuiz = useCallback(() => {
+        if (quizs.current.length == count) {
+            navigate("/")
+            return
+        }
+
+        if (inputBox.current !== null) {
+            inputBox.current.value = ""
+        }
+        setInputed("")
+
+        setCount(p => {
+            setJapanese(quizs.current[p].japanese)
+            setWords(shuffle(quizs.current[p].english.split(" ").map(w => ({ content: w, inputed: false }))))
+            return p + 1
+        })
+
+        return
+    },[])
+
     useEffect(() => {
-        const includeWords = new Set(inputed.split(" "));
+        if (quizs.current.at(count - 1) !== undefined && inputed === quizs.current[count - 1].english) {
+            nextQuiz()
+            return
+        }
+
         setWords(prev => {
+            const words = inputed.split(" ");
+            const has = (w: string) => {
+                const result = words.includes(w)
+                if (result) {
+                    const index = words.findIndex(word => w == word)
+                    words.splice(index, 1)
+                }
+                return result
+            }
+
             return prev.map(p => ({
                 content: p.content,
-                inputed: includeWords.has(p.content)
+                inputed: has(p.content)
             }))
         })
     }, [inputed])
