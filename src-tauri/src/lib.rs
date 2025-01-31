@@ -41,11 +41,21 @@ fn fetch_quizs(app: State<AppHandle>) -> Result<Vec<Quiz>, String> {
     Ok(quizs)
 }
 
+#[tauri::command]
+fn open_quiz_file(app: State<AppHandle>) -> Result<(), String> {
+    let file_path = quiz_data_file_path(app.inner());
+    if opener::open(&file_path).is_err() {
+        return Err(format!("ファイルを開けませんでした。: {}", &file_path));
+    };
+
+    Ok(())
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
-        .invoke_handler(tauri::generate_handler![greet, fetch_quizs])
+        .invoke_handler(tauri::generate_handler![greet, fetch_quizs, open_quiz_file])
         .setup(|app| {
             let handle = app.app_handle().clone();
             app.manage(handle);

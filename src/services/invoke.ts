@@ -10,3 +10,7 @@ export async function fetchQuizs(): Promise<Quiz[]> {
     const quizs = await invoke<Quiz[]>("fetch_quizs")
     return quizs
 }
+
+export async function openQuizFile() {
+    await invoke("open_quiz_file")
+}
