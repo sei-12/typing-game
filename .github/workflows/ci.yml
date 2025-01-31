@@ -44,5 +44,5 @@ jobs:
         run: npm run lint
 
       - name: build
-        run: npm run tauri build
+        run: npm run tauri build -- --verbose
       
