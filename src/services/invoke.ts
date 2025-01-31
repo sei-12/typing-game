@@ -33,5 +33,4 @@ export async function fetchQuizs(): Promise<Quiz[]> {
             explanation: ""
         }
     ]
-
 }

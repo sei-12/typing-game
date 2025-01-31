@@ -1,4 +1,4 @@
-import { Box, TextField, Typography } from "@mui/material";
+import { Box, styled, TextField, Typography } from "@mui/material";
 import { DisablePreventNavigation } from "../utils/DisablePreventNavigation";
 
 export type EnglishWords = {
@@ -12,6 +12,7 @@ export type GameProps = {
     maxCount: number;
     words: EnglishWords[];
     inputBox: React.RefObject<HTMLInputElement>;
+    todoRenameBar: React.RefObject<HTMLElement>;
     onChangeInputBox: (newVal: string) => void;
 };
 
@@ -85,12 +86,16 @@ export function Game(p: GameProps) {
                     marginTop: "3%",
                     width: "70%",
                     marginInline: "5%",
+                    border: "none",
+                    fieldset: {
+                        border: "none",
+                    },
                 }}
+                variant="outlined"
                 autoComplete="off"
                 autoCorrect="off"
                 autoCapitalize="off"
                 spellCheck={false}
-                variant="standard"
                 inputRef={p.inputBox}
                 onBlur={() => {
                     setTimeout(() => {
@@ -99,6 +104,19 @@ export function Game(p: GameProps) {
                 }}
                 onChange={(e) => p.onChangeInputBox(e.target.value)}
             ></TextField>
+            <Box
+                sx={{
+                    marginLeft: "15%",
+                    width: "70%",
+                }}
+            >
+                <Box
+                    ref={p.todoRenameBar}
+                    sx={{
+                        border: "solid 1px red",
+                    }}
+                ></Box>
+            </Box>
         </Box>
     );
 }
