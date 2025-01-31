@@ -30,6 +30,10 @@ jobs:
           shared-key: ${{ matrix.platform }}-${{ matrix.args }}
           workspaces: 'src-tauri -> target'
 
+      - name: install packages
+        if: matrix.platform == 'ubuntu-latest'
+        run: sudo apt-get install javascriptcoregtk-4.1 libsoup-3.0 webkit2gtk-4.1 -y
+
       # - uses: actions/cache@v2
       #   with:
       #     path: ${YARN_CACHE_FOLDER}
