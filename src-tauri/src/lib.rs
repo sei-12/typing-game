@@ -1,5 +1,6 @@
 use std::fs::{create_dir_all, read_to_string};
 
+use rand::seq::SliceRandom;
 use serde::{Deserialize, Serialize};
 use tauri::{AppHandle, Manager, State};
 
@@ -34,9 +35,14 @@ fn fetch_quizs(app: State<AppHandle>) -> Result<Vec<Quiz>, String> {
         return Err("ファイルの読み込みに失敗しました".to_string());
     };
 
-    let Ok(quizs) = serde_json::from_str::<Vec<Quiz>>(&content) else {
+    let Ok(mut quizs) = serde_json::from_str::<Vec<Quiz>>(&content) else {
         return Err("ファイルの形式が不正です".to_string());
     };
+
+    let mut rng = rand::thread_rng();
+    quizs.shuffle(&mut rng);
+
+    let quizs = quizs.into_iter().take(10).collect();
 
     Ok(quizs)
 }

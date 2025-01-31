@@ -1,0 +1,51 @@
+name: "CI"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test-tauri:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [macos-latest, windows-latest, ubuntu-latest]
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          shared-key: ${{ matrix.platform }}-${{ matrix.args }}
+          workspaces: 'src-tauri -> target'
+
+      # - uses: actions/cache@v2
+      #   with:
+      #     path: ${YARN_CACHE_FOLDER}
+      #     key: ${{ runner.os }}-yarn-cache-v1
+
+      - name: install frontend dependencies
+        run: npm ci
+      
+      - name: test
+        run: npm run test
+
+      - name: lint
+        run: npm run lint
+      
+      - uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: ${{ matrix.args }}
