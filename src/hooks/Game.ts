@@ -69,8 +69,12 @@ export function useGame(): GameProps {
     const [count, setCount] = useState(0)
     const [inputed, setInputed] = useState("")
     const inputBox = useRef<HTMLInputElement>(null)
+    const [answer,setAnswer] = useState("")
     const todoRenameBar = useTodoRenameBar()
 
+    const onClickGoHome = () => {
+        navigate("/")
+    }
 
     const startQuiz = useCallback((c: number) => {
         if (quizs.current === undefined) { return }
@@ -85,6 +89,7 @@ export function useGame(): GameProps {
             .map(w => ({ content: w, inputed: false }))
         const shuffledWords = shuffle(words)
 
+        setAnswer(quizs.current[c].english)
         setCount(currentQuizIndex.current + 1)
         setWords(shuffledWords)
         setJapanese(quizs.current[c].japanese)
@@ -149,5 +154,8 @@ export function useGame(): GameProps {
         onChangeInputBox: setInputed,
         inputBox,
         todoRenameBar: todoRenameBar.todoRenameBar,
+        gameover: todoRenameBar.gameover,
+        answer,
+        onClickGoHome,
     }
 }

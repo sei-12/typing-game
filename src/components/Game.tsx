@@ -1,4 +1,4 @@
-import { Box, styled, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import { DisablePreventNavigation } from "../utils/DisablePreventNavigation";
 
 export type EnglishWords = {
@@ -7,13 +7,16 @@ export type EnglishWords = {
 };
 
 export type GameProps = {
+    gameover: boolean;
     japanese: string;
+    answer: string;
     count: number;
     maxCount: number;
     words: EnglishWords[];
     inputBox: React.RefObject<HTMLInputElement>;
     todoRenameBar: React.RefObject<HTMLElement>;
     onChangeInputBox: (newVal: string) => void;
+    onClickGoHome: () => void;
 };
 
 export function Game(p: GameProps) {
@@ -26,6 +29,32 @@ export function Game(p: GameProps) {
             }}
         >
             <DisablePreventNavigation></DisablePreventNavigation>
+
+            <Box
+                sx={{
+                    display: p.gameover ? "block" : "none",
+                    position: "absolute",
+                    left: "15%",
+                    top: "12%",
+                    width: "70%",
+                    height: "70%",
+                    boxSizing: "border-box",
+                    padding: 2,
+                    border: "solid 4px black",
+                    zIndex: 1,
+                    backgroundColor: "white",
+                }}
+            >
+                <Typography
+                    sx={{
+                        fontSize: "x-large"
+                    }}
+                >GAME OVER</Typography>
+                
+                <Typography>{p.japanese}</Typography>
+                <Typography>{p.answer}</Typography>
+                <Button onClick={p.onClickGoHome}>ホームに戻る</Button>
+            </Box>
 
             <Box
                 sx={{
@@ -98,6 +127,7 @@ export function Game(p: GameProps) {
                 spellCheck={false}
                 inputRef={p.inputBox}
                 onBlur={() => {
+                    if ( p.gameover ){ return }
                     setTimeout(() => {
                         p.inputBox.current!.focus();
                     }, 10);
