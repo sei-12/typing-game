@@ -34,11 +34,6 @@ jobs:
         if: matrix.platform == 'ubuntu-latest'
         run: sudo apt-get update && sudo apt-get install javascriptcoregtk-4.1 libsoup-3.0 webkit2gtk-4.1 -y
 
-      # - uses: actions/cache@v2
-      #   with:
-      #     path: ${YARN_CACHE_FOLDER}
-      #     key: ${{ runner.os }}-yarn-cache-v1
-
       - name: install frontend dependencies
         run: npm ci
       
@@ -47,9 +42,7 @@ jobs:
 
       - name: lint
         run: npm run lint
+
+      - name: build
+        run: npm run tauri build
       
-      - uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          args: ${{ matrix.args }}
