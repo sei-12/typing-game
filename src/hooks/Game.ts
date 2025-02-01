@@ -12,9 +12,9 @@ function useTodoRenameBar() {
     const [gameover, setGameover] = useState(false)
     const intervalId = useRef(0)
     
-    const start = () => {
+    const start = (num_words: number) => {
         clearInterval(intervalId.current)
-        const timeoutMs = 10 * 1000
+        const timeoutMs = 4 * 1000 * num_words
         let time = 0;
         const fps = 1000 / 60
         intervalId.current = setInterval(() => {
@@ -93,7 +93,7 @@ export function useGame(): GameProps {
         setCount(currentQuizIndex.current + 1)
         setWords(shuffledWords)
         setJapanese(quizs.current[c].japanese)
-        todoRenameBar.start()
+        todoRenameBar.start(words.length)
     }, [])
 
     useEffect(() => {
